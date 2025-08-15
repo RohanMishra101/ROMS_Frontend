@@ -1,0 +1,92 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
+# Node.js
+# See https://github.com/github/gitignore/blob/main/Node.gitignore for more
+
+# Dependencies
+/node_modules
+/jspm_packages
+
+# Production
+/dist
+/build
+/out
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.log
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.lock
+
+# Environment variables
+# This is crucial for keeping sensitive information out of version control.
+# Always make sure to add your .env file to the gitignore.
+.env
+.env.local
+.env.production
+.env.development
+
+# Editor/OS-specific files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test coverage
+/coverage
+
+# Local databases (if you're using them)
+*.db
+*.sqlite
+/data/db/*
+
+# Uploads and other user-generated content
+# If your app handles file uploads, you should exclude that folder.
+/uploads
+
+# Binaries
+*.exe
+*.dll
+*.so
+*.o
+*.a
+*.lib
+
+# For front-end builds within a subdirectory
+/public/build
+/public/dist
+
+# Other misc files
+/.npm
