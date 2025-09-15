@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/dashboard";
+import MenuPage from "./components/dashboard/dashboard_content/Menu/MenuPage";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -38,6 +39,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
+          <Route path="/menu" element={<MenuPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
