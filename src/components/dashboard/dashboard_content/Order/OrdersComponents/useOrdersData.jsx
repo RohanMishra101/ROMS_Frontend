@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_REACT_APP_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE = import.meta.env.VITE_API_REACT_APP_API_BASE_URL || "http://192.168.1.98:3000/api";
 
 export default function useOrdersData(statusFilter) {
   const [orders, setOrders] = useState([]);
@@ -15,7 +15,7 @@ export default function useOrdersData(statusFilter) {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
       const query = statusFilter !== "all" ? `?status=${statusFilter}` : "";
 
@@ -36,7 +36,7 @@ export default function useOrdersData(statusFilter) {
   const updateOrderStatus = async (orderId, status) => {
     try {
       setUpdatingOrderId(orderId);
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
       const url = `${API_BASE}/order/${orderId}/status`;
 

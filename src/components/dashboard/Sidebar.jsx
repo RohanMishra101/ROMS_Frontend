@@ -196,15 +196,15 @@ export default function Sidebar({ isOpen, setIsOpen, activeComponent, setActiveC
         </div>
       </div>
 
-      {/* Mobile Hamburger Button - Fixed top-left */}
-      <button
+      {/* Mobile Hamburger Button - Hidden for better design */}
+      {/* <button
         onClick={handleMobileMenuToggle}
         className={`md:hidden fixed top-4 left-4 z-50 p-3 bg-white border border-gray-200 rounded-xl shadow-md text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200 ${
           mobileDrawerOpen ? "rotate-90" : ""
         }`}
       >
         {mobileDrawerOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
-      </button>
+      </button> */}
 
       {/* Mobile Overlay */}
       <div
@@ -270,7 +270,7 @@ export default function Sidebar({ isOpen, setIsOpen, activeComponent, setActiveC
       </div>
 
       {/* Spacer for mobile bottom navigation */}
-      <div className="md:hidden h-20" />
+      <div className="md:hidden h-16" />
     </>
   );
 }

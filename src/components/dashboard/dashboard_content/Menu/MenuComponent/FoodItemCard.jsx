@@ -3,6 +3,10 @@ import React from "react";
 import { FiPlus, FiMinus } from "react-icons/fi";
 
 export default function FoodItemCard({ item, addToCart, cartQuantity, updateQuantity }) {
+
+  const baseURL = import.meta.env.VITE_IMAGE_URL || "192.168.1.98:3000";
+  const imageUrl = item.imageURL ? `${baseURL}${item.imageURL.startsWith("/") ? item.imageURL : `/${item.imageURL}`}` : null;
+
   return (
     <div className="border rounded-xl shadow-sm hover:shadow-md transition bg-white overflow-hidden flex flex-col h-full">
       {/* Image */}
@@ -10,7 +14,7 @@ export default function FoodItemCard({ item, addToCart, cartQuantity, updateQuan
       <div className="relative h-40 w-full bg-gray-100">
         {item.imageURL ? (
           <img
-            src={item.imageURL}
+            src={imageUrl}
             alt={item.name}
             className="h-full w-full object-cover"
           />

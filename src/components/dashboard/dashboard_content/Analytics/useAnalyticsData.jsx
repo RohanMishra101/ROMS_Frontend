@@ -19,7 +19,7 @@ export function useAnalyticsData() {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
       const [revRes, mostRes, leastRes, peakRes, tableRes] = await Promise.all([

@@ -15,5 +15,5 @@ export default function DashboardContent({ activeComponent, socket }) {
     // Menu: <AdminMenu  socket={socket}/>
   };  
 
-  return <div className="flex-1 p-6 overflow-auto">{componentMap[activeComponent] || <Analytics />}</div>;
+  return <div className="h-full overflow-y-auto">{componentMap[activeComponent] || <Analytics />}</div>;
 }

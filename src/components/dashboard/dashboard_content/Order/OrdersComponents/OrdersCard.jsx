@@ -1,131 +1,136 @@
-import { useState } from "react";
-import { FaTimes, FaCheck, FaClock, FaUtensils, FaCheckCircle, FaReceipt } from "react-icons/fa";
-import BillingModal from "./BillingModal"; // <-- NEW
-
-const statusColors = {
-  pending: "bg-yellow-50 text-yellow-800 border-yellow-200",
-  preparing: "bg-blue-50 text-blue-800 border-blue-200",
-  served: "bg-green-50 text-green-800 border-green-200",
-  completed: "bg-green-50 text-green-800 border-green-200",
-  cancelled: "bg-gray-100 text-gray-500 border-gray-200",
-};
+import React, { useState } from "react";
+import {
+  FaClock,
+  FaUtensils,
+  FaCheckCircle,
+  FaTimes,
+  FaChevronRight,
+  FaReceipt,
+} from "react-icons/fa";
+import OrderDetailsModal from "./OrderDetailsModal";
 
 const statusIcons = {
   pending: <FaClock className="text-yellow-500" />,
   preparing: <FaUtensils className="text-blue-500" />,
   served: <FaCheckCircle className="text-green-500" />,
   completed: <FaCheckCircle className="text-green-600" />,
-  cancelled: <FaTimes className="text-gray-400" />,
+  cancelled: <FaTimes className="text-red-500" />,
 };
 
-const formatCurrency = (n) => `Rs. ${Number(n).toFixed(2)}`; // Nepali Rupees friendly
+const statusLabels = {
+  pending: "Pending",
+  preparing: "Preparing",
+  served: "Served",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
 
-export default function OrdersCard({ order, showActions, updatingOrderId, onUpdate }) {
-  const [showBill, setShowBill] = useState(false);
+const statusColors = {
+  pending: "bg-yellow-100 text-yellow-800",
+  preparing: "bg-blue-100 text-blue-800",
+  served: "bg-green-100 text-green-800",
+  completed: "bg-green-100 text-green-800",
+  cancelled: "bg-red-100 text-red-800",
+};
+
+export default function OrdersCard({ order }) {
+
+  const [showModal, setShowModal] = useState(false);
+
+  // console.log(order);
+  const tableNumber = order.tableNumber || order.table?.tableNumber || "N/A";
+  // console.log(tableNumber);
+  
+  const displayedItems = order.items.slice(0, 3);
+  const remainingItems = order.items.length - 3;
+
+  const orderTime = order.createdAt
+    ? new Date(order.createdAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   return (
-    <div className={`relative bg-white rounded-xl shadow-sm border overflow-hidden transition-all hover:shadow-md`}>
-      {/* Status Ribbon */}
-      <div className={`absolute top-0 right-0 px-3 py-1 text-xs font-semibold ${statusColors[order.status]} rounded-bl-lg`}>
-        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-      </div>
-
-      <div className="p-5">
+    <>
+      <div
+        onClick={() => setShowModal(true)}
+        className="cursor-pointer bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all duration-200 hover:border-blue-300 group flex flex-col h-full"
+      >
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              Table {order.table?.tableNumber || "N/A"}
-            </h3>
-            <p className="text-xs text-gray-500 mt-1">
-              Session: {order.sessionId.slice(0, 6)}
-            </p>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Table {tableNumber}
+              </h3>
+            </div>
+            <div className="flex items-center mt-1">
+              <FaReceipt className="text-gray-400 mr-1 text-xs" />
+              <p className="text-xs text-gray-500">
+                Order #{order.sessionId.slice(0, 6)}
+              </p>
+              {orderTime && (
+                <>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <p className="text-xs text-gray-500">{orderTime}</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="text-2xl">{statusIcons[order.status]}</div>
-        </div>
-
-        {/* Details */}
-        <div className="mb-4">
-          <p className="text-sm text-gray-500">
-            {new Date(order.createdAt).toLocaleString()}
-          </p>
-          <p className="text-xl font-bold text-gray-800 mt-1">
-            {formatCurrency(order.totalAmount)}
-          </p>
+          <div className="flex items-center">
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${statusColors[order.status]} mr-2`}
+            >
+              {statusLabels[order.status]}
+            </span>
+            <div className="text-xl">{statusIcons[order.status]}</div>
+          </div>
         </div>
 
         {/* Items */}
-        <div className="border-t pt-4">
-          <h4 className="font-medium text-sm text-gray-700 mb-3 flex items-center">
-            <span className="mr-2">Order Items</span>
-            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-              {order.items.length} items
-            </span>
-          </h4>
-          <ul className="space-y-3 max-h-40 overflow-y-auto pr-2">
-            {order.items.map((item, i) => (
-              <li key={i} className="flex justify-between text-sm">
-                <div>
-                  <span className="font-medium text-gray-700">{item.name}</span>
-                  <span className="text-gray-500 ml-2">×{item.quantity}</span>
-                </div>
-                <span className="text-gray-600">
-                  {formatCurrency(item.price * item.quantity)}
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Items:</h4>
+          <div className="space-y-2">
+            {displayedItems.map((item, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <span className="text-gray-600 text-sm">
+                  {item.quantity > 1 && (
+                    <span className="font-medium text-gray-800 mr-1">
+                      {item.quantity}×
+                    </span>
+                  )}
+                  {item.name}
                 </span>
-              </li>
+                <span className="text-xs text-gray-500">
+                  Rs. {(item.price * item.quantity).toFixed(2)}
+                </span>
+              </div>
             ))}
-          </ul>
+
+            {remainingItems > 0 && (
+              <div className="pt-1 text-xs text-blue-600">
+                +{remainingItems} more item{remainingItems > 1 ? "s" : ""}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer - always at bottom */}
+        <div className="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center">
+          <div className="text-sm text-gray-500 flex items-center group-hover:text-blue-600 transition-colors">
+            View details <FaChevronRight className="ml-1 text-xs" />
+          </div>
+          <p className="font-bold text-gray-800">
+            Total: Rs. {order.totalAmount.toFixed(2)}
+          </p>
         </div>
       </div>
 
-      {/* Actions */}
-      {showActions && (order.status === "pending" || order.status === "preparing" || order.status === "served") && (
-        <div className="border-t border-gray-100 px-5 py-3 bg-gray-50 flex flex-wrap justify-end gap-3">
-          {/* Served */}
-          <button
-            onClick={() => onUpdate(order._id, "served")}
-            disabled={updatingOrderId === order._id}
-            className="px-4 py-2 bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50 flex items-center gap-2 text-sm"
-            title="Mark as served"
-          >
-            <FaCheckCircle />
-            Served
-          </button>
-
-          {/* Cancel */}
-          <button
-            onClick={() => onUpdate(order._id, "cancelled")}
-            disabled={updatingOrderId === order._id}
-            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 text-sm"
-          >
-            <FaTimes className="text-red-500" />
-            Cancel
-          </button>
-
-          {/* Confirm / Bill */}
-          <button
-            onClick={() => setShowBill(true)}
-            disabled={updatingOrderId === order._id}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm"
-          >
-            <FaReceipt />
-            Confirm / Bill
-          </button>
-        </div>
+      {showModal && (
+        <OrderDetailsModal order={order} onClose={() => setShowModal(false)} />
       )}
-
-      {/* Billing Modal */}
-      {showBill && (
-        <BillingModal
-          order={order}
-          onClose={() => setShowBill(false)}
-          onConfirmed={() => {
-            // After confirming payment, mark as completed
-            onUpdate(order._id, "completed");
-            setShowBill(false);
-          }}
-        />
-      )}
-    </div>
+    </>
   );
 }

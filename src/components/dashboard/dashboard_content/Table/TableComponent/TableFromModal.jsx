@@ -19,9 +19,9 @@ export default function TableFormModal({ onClose, onSave, editingTable }) {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        throw new Error("No token found in localStorage — please log in.");
+        throw new Error("No token found in sessionStorage — please log in.");
       }
 
       const headers = { Authorization: `Bearer ${token}` };
@@ -45,11 +45,7 @@ export default function TableFormModal({ onClose, onSave, editingTable }) {
       onSave();
       onClose();
     } catch (err) {
-      console.error("Error saving table:", err.response?.data || err.message);
-      alert(
-        err.response?.data?.message ||
-          "Failed to save table. Please try again or log in again."
-      );
+      console.error("Error saving table:", err.response?.data?.message || "Failed to save table. Please try again or log in again.");
     } finally {
       setLoading(false);
     }
@@ -59,7 +55,7 @@ export default function TableFormModal({ onClose, onSave, editingTable }) {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Transparent blurred backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"
+        className="fixed inset-0 bg-white bg-opacity-20 backdrop-blur-md"
         onClick={onClose}
       />
 

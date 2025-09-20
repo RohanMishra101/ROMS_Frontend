@@ -26,7 +26,7 @@ export default function Tables() {
 
   const fetchTables = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const res = await axios.get(`${API_BASE}/table`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -52,28 +52,36 @@ export default function Tables() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this table?")) return;
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, id: null });
+
+  const handleDelete = (id) => {
+    setDeleteConfirm({ show: true, id });
+  };
+
+  const confirmDelete = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       await axios.delete(`${API_BASE}/table/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchTables();
     } catch (err) {
       console.error("Error deleting table:", err);
+    } finally {
+      setDeleteConfirm({ show: false, id: null });
     }
   };
 
   const handleDownloadAllQR = async () => {
     if (tables.length === 0) return;
+    console.log(tables);
     
     setDownloadingPDF(true);
     try {
       await generateQRPDF(tables, "Restaurant-Tables-QR-Codes");
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      console.error("Failed to generate PDF. Please try again.");
     } finally {
       setDownloadingPDF(false);
     }
@@ -86,12 +94,12 @@ export default function Tables() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-full bg-gray-50 p-3 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Table Management</h1>
-            <p className="text-gray-600 mt-2">Manage your restaurant tables and QR codes</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Table Management</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Manage your restaurant tables and QR codes</p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
@@ -161,16 +169,16 @@ export default function Tables() {
           <EmptyState onAddTable={handleAdd} />
         ) : (
           <>
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-800">All Tables ({filteredTables.length})</h2>
-              <span className="text-sm text-gray-500">
+            <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">All Tables ({filteredTables.length})</h2>
+              <span className="text-xs sm:text-sm text-gray-500">
                 {filteredTables.length === tables.length 
                   ? "Showing all tables" 
                   : `Filtered ${filteredTables.length} of ${tables.length} tables`}
               </span>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
               {filteredTables.map((table) => (
                 <TableCard
                   key={table._id}
@@ -196,6 +204,40 @@ export default function Tables() {
             onClose={() => setIsBulkModalOpen(false)}
             onSave={fetchTables}
           />
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deleteConfirm.show && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-white bg-opacity-20 backdrop-blur-md" onClick={() => setDeleteConfirm({ show: false, id: null })} />
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6 relative z-10">
+              <div className="flex items-center mb-4">
+                <div className="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Delete Table</h3>
+                <p className="text-sm text-gray-500 mb-6">Are you sure you want to delete this table? This action cannot be undone.</p>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => setDeleteConfirm({ show: false, id: null })}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

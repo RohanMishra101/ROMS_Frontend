@@ -42,7 +42,7 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const res = await loginAdmin(data); // res.token, res.user
-      login(res.token, res.user); // Save in localStorage
+      login(res.token, res.user); // Save in sessionStorage
       toast.success("Logged in successfully!");
       navigate("/dashboard");
     } catch (err) {

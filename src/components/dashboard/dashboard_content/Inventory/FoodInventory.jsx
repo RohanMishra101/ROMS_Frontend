@@ -16,7 +16,7 @@ export default function FoodInventory() {
   const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
 
   const authHeaders = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     return { Authorization: `Bearer ${token}` };
   };
 
@@ -85,13 +85,13 @@ export default function FoodInventory() {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-4 md:p-6 min-h-full">
       {/* Top bar */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Food Inventory</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Food Inventory</h1>
         <button
           onClick={() => { setCurrentItem(null); setModalOpen(true); }}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 w-full sm:w-auto"
         >
           <FaPlus /> Add Item
         </button>
@@ -106,7 +106,7 @@ export default function FoodInventory() {
           No food items found.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
           {foodItems.map((item) => (
             <FoodCard
               key={item._id}

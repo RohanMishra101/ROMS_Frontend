@@ -26,38 +26,54 @@ export default function BillingModal({ order, onClose, onConfirmed }) {
   }, [order.items, applyVAT, discountType, discountValue]);
 
 const downloadPDF = async () => {
-  const node = billRef.current;
+  try {
+    const node = billRef.current;
+    if (!node) {
+      console.error("Bill reference not found");
+      return;
+    }
 
-  // Clone and normalize styles (convert "oklch" etc. into rgb/hex)
-  const clone = node.cloneNode(true);
-  clone.querySelectorAll("*").forEach(el => {
-    const style = window.getComputedStyle(el);
-    const bg = style.backgroundColor;
-    const color = style.color;
-    if (bg && bg.includes("oklch")) el.style.backgroundColor = "#ffffff"; // fallback
-    if (color && color.includes("oklch")) el.style.color = "#000000"; // fallback
-  });
+    // Clone and normalize styles (convert "oklch" etc. into rgb/hex)
+    const clone = node.cloneNode(true);
+    clone.querySelectorAll("*").forEach(el => {
+      const style = window.getComputedStyle(el);
+      const bg = style.backgroundColor;
+      const color = style.color;
+      if (bg && bg.includes("oklch")) el.style.backgroundColor = "#ffffff"; // fallback
+      if (color && color.includes("oklch")) el.style.color = "#000000"; // fallback
+    });
 
-  document.body.appendChild(clone);
-  clone.style.position = "fixed";
-  clone.style.top = "-9999px"; // hide it
+    document.body.appendChild(clone);
+    clone.style.position = "fixed";
+    clone.style.top = "-9999px"; // hide it
+    clone.style.left = "-9999px";
+    clone.style.width = "800px"; // Set a fixed width for consistent rendering
 
-  const canvas = await html2canvas(clone, { scale: 2, useCORS: true });
-  document.body.removeChild(clone);
+    const canvas = await html2canvas(clone, { 
+      scale: 2, 
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#ffffff"
+    });
+    document.body.removeChild(clone);
 
-  const img = canvas.toDataURL("image/png");
+    const img = canvas.toDataURL("image/png");
 
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-  const imgProps = { width: canvas.width, height: canvas.height };
-  const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
-  const imgWidth = imgProps.width * ratio;
-  const imgHeight = imgProps.height * ratio;
+    const imgProps = { width: canvas.width, height: canvas.height };
+    const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
+    const imgWidth = imgProps.width * ratio;
+    const imgHeight = imgProps.height * ratio;
 
-  pdf.addImage(img, "PNG", (pageWidth - imgWidth) / 2, 10, imgWidth, imgHeight);
-  pdf.save(`Bill_${order.table?.tableNumber || "NA"}_${order._id.slice(0,6)}.pdf`);
+    pdf.addImage(img, "PNG", (pageWidth - imgWidth) / 2, 10, imgWidth, imgHeight);
+    pdf.save(`Bill_${order.table?.tableNumber || "NA"}_${order._id.slice(0,6)}.pdf`);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    alert("Failed to generate PDF. Please try again.");
+  }
 };
 
 
@@ -88,13 +104,13 @@ const downloadPDF = async () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white w-full max-w-5xl rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-md p-2 sm:p-4">
+      <div className="bg-white w-full max-w-5xl rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 py-4 border-b flex items-center justify-between bg-gray-50">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between bg-gray-50">
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">Order Summary</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800">Order Summary</h3>
+            <p className="text-xs sm:text-sm text-gray-500">
               Table {order.table?.tableNumber} • {new Date(order.createdAt).toLocaleString()}
             </p>
           </div>
@@ -102,12 +118,12 @@ const downloadPDF = async () => {
             onClick={onClose} 
             className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
           >
-            <FiX size={20} />
+            <FiX size={18} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-auto grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+        <div className="flex-1 overflow-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6">
           {/* Controls */}
           <div className="lg:col-span-1 space-y-4">
             <div className="space-y-4">
@@ -266,24 +282,24 @@ const downloadPDF = async () => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t bg-gray-50 flex flex-wrap gap-3 justify-end">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-gray-50 flex flex-wrap gap-2 sm:gap-3 justify-end">
           <button 
             onClick={printBill} 
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
           >
-            <FiPrinter size={16} /> Print
+            <FiPrinter size={14} /> <span className="hidden sm:inline">Print</span>
           </button>
           <button 
             onClick={downloadPDF} 
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
           >
-            <FiDownload size={16} /> Download PDF
+            <FiDownload size={14} /> <span className="hidden sm:inline">Download PDF</span>
           </button>
           <button
             onClick={onConfirmed}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base"
           >
-            <FiCheckCircle size={16} /> Confirm Payment
+            <FiCheckCircle size={14} /> <span className="hidden sm:inline">Confirm Payment</span>
           </button>
         </div>
       </div>

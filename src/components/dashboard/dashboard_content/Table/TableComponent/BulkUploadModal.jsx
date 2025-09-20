@@ -15,7 +15,7 @@ export default function BulkUploadModal({ onClose, onSave }) {
     
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       
       // Parse input - support for comma separated, new line separated, or JSON array
       let tableData;
@@ -62,7 +62,7 @@ export default function BulkUploadModal({ onClose, onSave }) {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Transparent blurred backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"
+        className="fixed inset-0 bg-white bg-opacity-20 backdrop-blur-md"
         onClick={onClose}
       />
       

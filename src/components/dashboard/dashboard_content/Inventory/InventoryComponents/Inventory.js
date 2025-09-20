@@ -1,6 +1,6 @@
 const handleSave = async (formData) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     const headers = { Authorization: `Bearer ${token}` };
     const BASE_FOOD_API = import.meta.env.VITE_API_FOOD_URL || "http://localhost:3000/api/food";
     // convert to FormData for file upload
