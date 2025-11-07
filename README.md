@@ -19,13 +19,13 @@ ROMS is a full‑stack application built on the **MongoDB, Express.js, React, No
 ## 🖼️ Screenshots & UI Views  
 
 ### 🧑‍💼 Admin Dashboard  
-![Admin Dashboard](assets/admin_dashboard.jpg)  
+![Admin Dashboard](assets/admin_dashboard.png)  
 
 ### 📦 Inventory View  
-![Inventory & Orders](assets/inventory.jpg)  
+![Inventory & Orders](assets/inventory.png)  
 
 ### 📦 Orders View  
-![Inventory & Orders](assets/inventory.jpg)  
+![Inventory & Orders](assets/Orders.png)  
 
 ### 🍔 Customer Menu  
 ![Customer Menu](assets/menu.jpg)  
@@ -34,7 +34,7 @@ ROMS is a full‑stack application built on the **MongoDB, Express.js, React, No
 ![Customer Cart](assets/cart.jpg)  
 
 ### 🧾 Current Order  
-![Current Order](assets/order.jpg)  
+![Current Order](assets/current_order.jpg)  
 
 ### 💳 Customer Bill  
 ![Customer Bill](assets/bill.jpg)  
