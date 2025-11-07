@@ -1,12 +1,60 @@
-# React + Vite
+# 🍽️ ROMS – Restaurant Management System (MERN Stack)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 💡 Project Overview  
+ROMS is a full‑stack application built on the **MongoDB, Express.js, React, Node.js (MERN)** stack, designed to modernize the restaurant ordering experience. Guests can simply scan a QR code to view the menu on their phone, place orders seamlessly, and view their current order and bill — while staff manage inventory, orders, and dashboard metrics in the backend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Key Features  
+- **QR Code Menu & Ordering**: Customers scan a table‑specific QR code, browse the digital menu, add items to their cart, and place orders from their device.  
+- **Full‑stack Implementation**: Built with React for the frontend and Node/Express for backend APIs, with MongoDB handling data persistence.  
+- **Admin Dashboard**: Staff and management have a dedicated UI to view inventory, track orders in real time, and monitor performance.  
+- **Real‑Time Order Flow**: Orders placed by customers are captured instantly, processed by backend services, and updated on the dashboard.  
+- **Responsive & Mobile‑First**: The system is optimized for mobile devices (for customer side) and desktop (for administrative side).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🖼️ Screenshots & UI Views  
+
+### 🧑‍💼 Admin Dashboard  
+![Admin Dashboard](assets/admin_dashboard.jpg)  
+
+### 📦 Inventory View  
+![Inventory & Orders](assets/inventory.jpg)  
+
+### 📦 Orders View  
+![Inventory & Orders](assets/inventory.jpg)  
+
+### 🍔 Customer Menu  
+![Customer Menu](assets/menu.jpg)  
+
+### 🛒 Customer Cart  
+![Customer Cart](assets/cart.jpg)  
+
+### 🧾 Current Order  
+![Current Order](assets/order.jpg)  
+
+### 💳 Customer Bill  
+![Customer Bill](assets/bill.jpg)  
+
+---
+
+## 🛠️ Tech Stack  
+| Component         | Technology               |
+|-------------------|--------------------------|
+| Frontend          | React.js                 |
+| Backend           | Node.js, Express.js      |
+| Database          | MongoDB                  |
+| API Communication | RESTful APIs             |
+| Authentication    | JSON Web Tokens (JWT)    |
+| Styling/UI        | CSS / Styled‑Components  |
+
+---
+
+## 🚀 Installation & Setup  
+### 1. Clone the repository  
+```bash
+git clone https://github.com/YourUsername/ROMS_Frontend.git
+cd ROMS_Frontend
