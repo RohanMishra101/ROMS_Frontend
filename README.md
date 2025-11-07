@@ -53,8 +53,4 @@ ROMS is a full‑stack application built on the **MongoDB, Express.js, React, No
 
 ---
 
-## 🚀 Installation & Setup  
-### 1. Clone the repository  
-```bash
-git clone https://github.com/YourUsername/ROMS_Frontend.git
-cd ROMS_Frontend
+
